@@ -7,7 +7,7 @@ const cors = require("cors");
 const { google } = require("googleapis");
 
 const app = express();
-
+app.use(express.urlencoded());
 app.use(express.json());
 
 app.use(cors({
@@ -200,7 +200,12 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
 app.delete("/api/delete/:id", async (req, res) => {
     try {
         const fileId = req.params.id;
-
+        if (!fileId) {
+            return res.status(400).json({
+                success: false,
+                message: "File ID missing"
+            });
+        }
         await drive.files.delete({
             fileId: fileId,
         });
@@ -211,7 +216,7 @@ app.delete("/api/delete/:id", async (req, res) => {
         });
 
     } catch (error) {
-        console.error("DELETE ERROR:", error.message);
+        console.error("DELETE ERROR:", error.response?.data || error.message);
 
         res.status(500).json({
             success: false,
