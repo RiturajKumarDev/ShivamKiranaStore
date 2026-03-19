@@ -163,13 +163,24 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
 
         fs.unlinkSync(filePath);
 
+        await drive.permissions.create({
+            fileId: response.data.id,
+            requestBody: {
+                role: "reader",
+                type: "anyone",
+            },
+        });
+
+        const publicUrl = `https://drive.google.com/uc?export=view&id=${response.data.id}`;
+
         res.json({
             success: true,
             message: "Upload successful",
             fileId: response.data.id,
             fileName: response.data.name,
-            url: `https://drive.google.com/file/d/${response.data.id}/view`,
+            url: publicUrl,
         });
+
 
     } catch (error) {
         console.error("UPLOAD ERROR:", error.response?.data || error.message);
