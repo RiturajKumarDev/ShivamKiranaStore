@@ -197,6 +197,29 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
     }
 });
 
+app.delete("/api/delete/:id", async (req, res) => {
+    try {
+        const fileId = req.params.id;
+
+        await drive.files.delete({
+            fileId: fileId,
+        });
+
+        res.json({
+            success: true,
+            message: "File deleted successfully",
+        });
+
+    } catch (error) {
+        console.error("DELETE ERROR:", error.message);
+
+        res.status(500).json({
+            success: false,
+            message: "Error deleting file",
+        });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
