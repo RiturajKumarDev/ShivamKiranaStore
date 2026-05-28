@@ -225,6 +225,13 @@ app.delete("/api/delete/:id", async (req, res) => {
     }
 });
 
+
+app.get("/api/health", (req, res) => {
+    res.json({
+        "message":"Hello! I am ready"
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
